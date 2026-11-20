@@ -30,6 +30,53 @@ geoip-url = https://github.com/Masaiki/GeoIP2-CN/raw/release/Country.mmdb
 # resource-parser = https://gitlab.com/sub-store/Sub-Store/-/releases/permalink/latest/downloads/sub-store-parser.loon.min.js
 
 
+[Host]
+# 厂商域名用厂商自家 DNS 解析，CDN 调度更贴近同一网络
+# 语法 *.域名 = server:IP；优先级高于 [General] 的 dns-server
+# 只对直连域名有效，走代理的域名由节点侧解析
+
+# —— 腾讯 / DNSPod：119.29.29.29 ——
+qq.com = server:119.29.29.29
+*.qq.com = server:119.29.29.29
+*.gtimg.cn = server:119.29.29.29
+*.qpic.cn = server:119.29.29.29
+*.qlogo.cn = server:119.29.29.29
+*.tencent.com = server:119.29.29.29
+*.myqcloud.com = server:119.29.29.29
+*.tencentcloudapi.com = server:119.29.29.29
+*.servicewechat.com = server:119.29.29.29
+
+# —— 阿里：223.5.5.5 ——
+*.taobao.com = server:223.5.5.5
+*.tmall.com = server:223.5.5.5
+*.alicdn.com = server:223.5.5.5
+*.aliyun.com = server:223.5.5.5
+*.aliyuncs.com = server:223.5.5.5
+*.alipay.com = server:223.5.5.5
+*.1688.com = server:223.5.5.5
+
+# —— 百度：180.76.76.76 ——
+*.baidu.com = server:180.76.76.76
+*.bdstatic.com = server:180.76.76.76
+*.bdimg.com = server:180.76.76.76
+
+# —— 字节跳动 / 火山引擎：180.184.1.1 ——
+*.bytedance.com = server:180.184.1.1
+*.douyin.com = server:180.184.1.1
+*.pstatp.com = server:180.184.1.1
+*.byteimg.com = server:180.184.1.1
+*.snssdk.com = server:180.184.1.1
+*.toutiao.com = server:180.184.1.1
+*.douyinpic.com = server:180.184.1.1
+*.douyinvod.com = server:180.184.1.1
+*.bytecdntp.com = server:180.184.1.1
+*.bytescm.com = server:180.184.1.1
+*.zjcdn.com = server:180.184.1.1
+*.ixigua.com = server:180.184.1.1
+
+# —— B 站 / 网易 / 京东等无自有公共 DNS，走 [General] 全局 ——
+
+
 [Remote Proxy]
 # 【必改】换成订阅链接
 
@@ -70,15 +117,7 @@ AI 服务 = select, 美国节点, 日本节点, 新加坡节点, 节点选择, i
 
 
 [Rule]
-# 局域网与本地直连
-IP-CIDR,192.168.0.0/16,DIRECT,no-resolve
-IP-CIDR,10.0.0.0/8,DIRECT,no-resolve
-IP-CIDR,172.16.0.0/12,DIRECT,no-resolve
-IP-CIDR,127.0.0.0/8,DIRECT,no-resolve
-DOMAIN-SUFFIX,local,DIRECT
-DOMAIN-SUFFIX,lan,DIRECT
-DOMAIN,time.apple.com,DIRECT
-# 国内 IP 直连见 [Remote Rule] 末尾 ChinaIPs；此处不要写 GEOIP,CN
+
 FINAL,节点选择
 
 
@@ -120,11 +159,9 @@ https://github.com/blackmatrix7/ios_rule_script/raw/master/rule/Loon/Microsoft/M
 https://github.com/blackmatrix7/ios_rule_script/raw/master/rule/Loon/Apple/Apple.list, policy=苹果服务, tag=Apple, enabled=true
 https://github.com/blackmatrix7/ios_rule_script/raw/master/rule/Loon/Google/Google.list, policy=节点选择, tag=Google, enabled=true
 
-# —— 国内直连 ——
-https://github.com/blackmatrix7/ios_rule_script/raw/master/rule/Loon/ChinaMax/ChinaMax.list, policy=DIRECT, tag=国内直连, enabled=true
+https://kelee.one/Tool/Loon/Lsr/LAN_SPLITTER.lsr, policy=DIRECT, tag=LAN, enabled=true
 
-# —— 国内 IP 段（最后一条）——
-https://github.com/blackmatrix7/ios_rule_script/raw/master/rule/Loon/ChinaIPs/ChinaIPs.list, policy=DIRECT, tag=国内IP段, enabled=true
+https://kelee.one/Tool/Loon/Lsr/REGION_SPLITTER.lsr, policy=DIRECT, tag=CN REGION, enabled=true
 
 
 [Rewrite]
@@ -138,11 +175,6 @@ https://github.com/blackmatrix7/ios_rule_script/raw/master/rule/Loon/ChinaIPs/Ch
 
 
 [Plugin]
-# 去广告复写（严格版）
-https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/rewrite/Loon/AdvertisingLite/AdvertisingLite.plugin, enabled=true
-# 可选：跳过代理域名清单
-# https://raw.githubusercontent.com/Tartarus2014/Loon-Script/refs/heads/master/Plugin/skip-proxy.lpx, enabled=true
-
 
 [Mitm]
 # 插件 hostname 会自动合并
